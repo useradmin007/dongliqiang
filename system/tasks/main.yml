@@ -1,0 +1,10 @@
+- name: CentOS 6 stop service
+  service: name=iptables state=stopped enabled=no
+  when: ansible_distribution_major_version == "6"
+- name: CentOS 7 stop service
+  service: name=firewalld state=stopped enabled=no
+  when: ansible_distribution_major_version == "7"
+- name: Conf selinux
+  file: src=config dest=/etc/selinux/config
+- name: setenforce Selinux
+  command: setenforce 0

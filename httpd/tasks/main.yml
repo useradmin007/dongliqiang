@@ -1,0 +1,10 @@
+- name: install httpd
+  yum: name=httpd state=latest
+  when: ansible_os_family == "RedHat"
+- name: install conf file
+  copy: src=lb.conf dest=/etc/httpd/conf.d/lb.conf
+  notify: restart httpd
+  tags: conf
+- name: start httpd
+  service: name=httpd state=started
+  

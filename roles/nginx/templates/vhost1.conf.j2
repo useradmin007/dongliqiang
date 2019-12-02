@@ -1,0 +1,7 @@
+server {
+	listen 8080;
+	server_name www.{{ ansible_nodename }};
+		location / {
+			root	"/www/html/data";
+		}
+}

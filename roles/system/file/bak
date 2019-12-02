@@ -1,0 +1,204 @@
+#!/usr/bin/perl
+#bak
+# backup a file before editing
+# if fullname contains "/" save file in $fullpath
+# if sav directory exists, save copy there
+# else make copy in current directory
+
+$debug = 0;
+
+if ($#ARGV == -1)
+{
+    print "USAGE: $0 <file to edit>\n";
+    exit(1);
+}
+else
+{
+    if (-f $ARGV[0])
+    {
+        $file = $ARGV[0];
+    }
+    else
+    {
+        print "ERROR: no file $file\n";
+    }
+}
+
+$sav_dir = "$HOME";
+$sav_dir = "c:/data";
+
+#
+## get the current directory
+#
+    use Cwd;
+    $pwd = cwd();
+
+if ($file =~ m#/#)
+{
+    @parts = split(m#/#,$file);
+    $file =  pop(@parts);
+    $filepath = join("/",@parts);
+}
+else
+{
+    $filepath = $pwd;
+}
+
+#$fullpath = $pwd."/".$file;
+$fullpath = $filepath."/".$file;
+
+$sav_dir  = $filepath."/sav";
+
+if ($debug)
+{
+    print "fullpath: $fullpath\n";
+    print "sav_dir: $sav_dir\n";
+}
+
+
+
+#build new filename
+
+if (-d $sav_dir)
+{
+    if (-w $sav_dir)
+    {
+        $target = $sav_dir."/".$file;
+    }
+    else
+    {
+        print "Warning: cannot write to $sav_dir -- using current dir\n";
+    }
+}
+if ( ! (defined $target))
+{
+    $target = $filepath."/".$file;
+    if ($debug)
+    {
+        print "$sav_dir doesn't exist -- use same dir\n";
+    }
+}
+
+if ($debug)
+{
+    print "copy $fullpath $target\n";
+}
+cp_file($fullpath ,$target);
+
+
+####################################################################
+sub make_dir
+####################################################################
+# make directories
+{
+    ($arg) = @_;
+    $target = $sav_dir;
+    @parts = split("/",$arg);
+    $#parts = $#parts - 1;
+    foreach $part (@parts)
+    {
+        $target = $target."/".$part;
+        if (-d $target)
+        {
+        }
+        else
+        {
+            if ($debug)
+            {
+                 print "make $target\n";
+            }
+            $res = mkdir($target,0775);
+            if ($debug)
+            {
+                 print "$res\n";
+            }
+        }
+    }
+    return($target);
+}
+
+
+####################################################################
+sub cp_file
+####################################################################
+{
+    ($source,$target) = @_;
+    $today = y2k();
+    $size = (-s $source);
+    open(IN,$source) || die "ERROR: Cannot read source: $source";
+    read(IN,$buf,$size);
+    close(IN);
+    $outfile = $target.".".$today;
+    if (-f $outfile)
+    {
+        if ($debug)
+        {
+             print "increment \n";
+        }
+        $num = find_next($target,$today,1);
+        if ($debug)
+        {
+             print "next = $num\n";
+        }
+        $outfile = $target.".".$today.".".$num;
+    }
+
+    if ($debug)
+    {
+        print "write $outfile - $size bytes\n";
+    }
+    open(OUT,">$outfile") || die "ERROR: Cannot write target: $outfile";
+    print OUT "$buf";
+    close(OUT);
+}
+
+
+####################################################################
+sub find_next
+####################################################################
+{
+    my ($file,$date,$num) = @_;
+    $newfile = $file.".".$date.".".$num;
+    if (-f $newfile)
+    {
+        $num = find_next($file,$date,$num+1);
+    }
+    return($num);
+}
+
+
+####################################################################
+sub y2k
+####################################################################
+{
+    # return today's date as YYYYMMDDhhmm
+
+    #
+    ## time returns the number of seconds since 1970
+    ## pass that to localtime, which converts it into mon, year, etc.
+    #
+    ($sec,$min,$hour,$mday,$mon,$year) = localtime(time);
+
+    #
+    ## the month comes back in the range of 0-11, so add one
+    #
+    $mon = $mon + 1;
+
+    #
+    ## pre-pend a zero to single digit numbers
+    #
+    if ($mon < 10)
+    {
+        $mon = "0".$mon;
+    }
+    if ($mday < 10)
+    {
+        $mday = "0".$mday;
+    }
+
+    $year = 1900 + $year;
+
+    $today = $year.$mon.$mday;
+
+    return($today);
+}

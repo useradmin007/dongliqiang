@@ -1,0 +1,12 @@
+#1. create home diractory .ssh/id_rsd.pub
+ssh-keygen -t rsd -C "your@mail.com"
+
+#2. github.com into PC-ssh-key's id_rsd.pub to here
+
+#3. config github client form Linux
+git init
+git remote add origin git@github.com:useradmin007/dongliqiang.git
+git pull --rebase origin master
+git add .
+git commit -m "expect ssh key distration"
+git push -u origin master

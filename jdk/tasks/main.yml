@@ -1,0 +1,4 @@
+- name: install openjdk
+  yum: name=java-{{ version }}-openjdk-devel state=latest
+- name: install env file
+  copy: src=java.sh dest=/etc/profile.d/

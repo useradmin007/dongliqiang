@@ -2,3 +2,9 @@
   remote_user: root
   roles:
   - nginx
+- hosts: tomcat
+  remote_user: root
+  tags: tomcatinstall
+  roles:
+  - { role: jdk,version: 1.8.0 }
+  - tomcat

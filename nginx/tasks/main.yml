@@ -2,7 +2,7 @@
   yum: name=nginx state=latest
   when: ansible_os_family == "RedHat"
 - name: install conf file
-  copy: src=lb.conf dest=/etc/httpd/conf.d/lb.conf
+  copy: src=lb.conf dest=/etc/nginx/conf.d/lb.conf
   notify: restart nginx
   tags: conf
 - name: start nginx

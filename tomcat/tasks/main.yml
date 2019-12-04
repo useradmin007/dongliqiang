@@ -1,0 +1,9 @@
+- name: install package
+  yum: name={{ item }} state=latest
+  with_items:
+  - tomcat
+  - tomcat-webapps
+  - tomcat-docs-webapp
+  when: ansible_os_family == "RedHat"
+- name: start tomcat
+  service: name=tomcat state=started enabled=yes

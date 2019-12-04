@@ -1,0 +1,4 @@
+- hosts: lb
+  remote_user: root
+  roles:
+  - nginx

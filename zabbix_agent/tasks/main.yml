@@ -1,0 +1,8 @@
+- name: install zabbix_agent
+  yum: name=zabbix30-agent state=latest
+- name: install config file
+  template: src=/etc/ansible/roles/zabbix_agent/templates/zabbix_agentd.conf.j2 dest=/etc/zabbix_agentd.conf
+  tags: conf
+  notify: restart zabbix_agent
+- name: start zabbix_agent
+  service: name=zabbix-agent state=started enable=true

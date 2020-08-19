@@ -1,0 +1,14 @@
+查看系统当前时区 
+[root@ansible ~]# ls -lrt /etc/localtime
+lrwxrwxrwx. 1 root root 33 Jul 22 10:19 /etc/localtime -> /usr/share/zoneinfo/Asia/Shanghai
+
+如果localtime软连接的时区不正确，用rm -f /etc/localtime 删除软连接文件
+ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime 
+将时区调整为你需要的。在这里我是用shanghai的时区
+安装ntpdate工具
+yum install -y ntpdate
+指定时间同步服务器进行同步时间
+ntpdate -u ntp.api.bz
+查看时间是否同步
+[root@ansible ~]# date
+Wed Jul 22 11:22:38 CST 2020

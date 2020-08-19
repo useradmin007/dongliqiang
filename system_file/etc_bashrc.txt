@@ -1,0 +1,8 @@
+在/etc/bashrc文件中天价变量，可在全局用户生效
+编辑/etc/bashrc文件，添加以下四行：
+HISTFILESIZE=2000
+HISTSIZE=2000
+HISTTIMEFORMAT='%F %T '
+export HISTTIMEFORMAT
+
+#source /etc/bashrc

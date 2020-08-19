@@ -1,0 +1,6 @@
+linux command
+1.pwdx 根据pid查看进程家目录
+[root@localhost ~]# ss -tnlp|grep 8080
+LISTEN     0      100         :::8080                    :::*                   users:(("java",pid=21793,fd=48))
+[root@localhost ~]# pwdx 21793
+21793: /opt/apache-tomcat-8.5.29/bin

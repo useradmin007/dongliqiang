@@ -1,0 +1,25 @@
+#新手报错大全：
+问题一：
+ansible-playbook编写的时候报错如下，
+[ansible@ansible scripts]$ ansible-playbook -C vartest.yml 
+
+PLAY [all] **************************************************************************************************************************
+
+TASK [Gathering Facts] **************************************************************************************************************
+ok: [192.168.111.130]
+ok: [192.168.111.131]
+ok: [192.168.111.132]
+ok: [192.168.111.133]
+ok: [192.168.111.134]
+ERROR! the field 'hosts' is required but was not set
+
+[ansible@ansible scripts]$ cat vartest.yml 
+- hosts: all
+  remote_user: root
+  vars_files:
+    - vars.yml
+-  tasks:       ///注意这里tasks 前面多了 - 
+  - name: yum expect
+    yum: name={{ var1 }}
+  - name: create file
+问题二：

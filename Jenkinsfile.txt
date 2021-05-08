@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('printenv') {
+            steps {
+                echo "Hello world"
+                sh 'printenv'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building..'
+                sh """
+                curl 'https://oapi.dingtalk.com/robot/send?access_token=2e5c0ed49aa7259f10c1755ec556c82fa275b57209bf317509a5aabce5362dc5' \
+                 -H 'Content-Type: application/json'   \
+                 -d '{"msgtype": "text",
+                       "text": {
+                          "content": "构建成功\n 关键字:Inafa\n 项目名称：${JOB_NAME}\n 构建地址：${RUN_DISPLAY_URL}"
+                 }
+                }'
+                """
+            }
+        }
+        stage('check scm') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying....'
+            }
+        }
+    }
+}
